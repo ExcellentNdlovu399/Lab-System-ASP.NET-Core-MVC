@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Lab_System.Models.ApplicationUser>
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Manage Users</div>
+
+        <a asp-controller="Admin"
+           asp-action="CreateUser"
+           class="pill active"
+           style="text-decoration:none;">
+            Create User
+        </a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Username</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.FullName</td>
+                        <td class="mono">@user.Email</td>
+                        <td>
+                            <span class="badge badge-purple">
+                                @user.RoleName
+                            </span>
+                        </td>
+                        <td class="mono">@user.UserName</td>
+                        <td>
+                            <a asp-controller="Admin"
+                               asp-action="EditUser"
+                               asp-route-id="@user.Id"
+                               class="tag"
+                               style="text-decoration:none;">
+                                Edit
+                            </a>
+
+                            <a asp-controller="Admin"
+                               asp-action="DeleteUser"
+                               asp-route-id="@user.Id"
+                               class="tag"
+                               style="text-decoration:none;">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

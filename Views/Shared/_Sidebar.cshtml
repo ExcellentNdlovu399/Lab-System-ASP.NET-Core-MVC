@@ -1,0 +1,140 @@
+﻿@{
+    var activeTab = ViewData["ActiveTab"]?.ToString() ?? "overview";
+
+    var chemicalCount = ViewData["ChemicalCount"] ?? 0;
+    var equipmentCount = ViewData["EquipmentCount"] ?? 0;
+    var experimentCount = ViewData["ExperimentCount"] ?? 0;
+    var reactionCount = ViewData["ReactionCount"] ?? 0;
+    var researcherCount = ViewData["ResearcherCount"] ?? 0;
+}
+
+<aside class="sidebar">
+    <div class="logo">
+        <div class="logo-mark">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#0d0f14" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18" />
+                </svg>
+            </div>
+            <div>
+                <div class="logo-name">Lab_System</div>
+            </div>
+        </div>
+
+        <div class="logo-sub">Chemistry the backbone of all science</div>
+    </div>
+
+    <nav class="nav">
+
+        <a class="nav-item @(activeTab == "overview" ? "active" : "")"
+           asp-controller="Dashboard"
+           asp-action="Index"
+           asp-route-tab="overview">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" />
+                <rect x="14" y="3" width="7" height="7" />
+                <rect x="3" y="14" width="7" height="7" />
+                <rect x="14" y="14" width="7" height="7" />
+            </svg>
+            Overview
+        </a>
+
+        <div class="nav-section">Inventory</div>
+
+        <a class="nav-item @(activeTab == "chemicals" ? "active" : "")"
+           asp-controller="Dashboard"
+           asp-action="Index"
+           asp-route-tab="chemicals">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 3h6l1 7H8L9 3z" />
+                <path d="M8 10s-3 2.5-3 6a7 7 0 0 0 14 0c0-3.5-3-6-3-6" />
+                <line x1="12" y1="10" x2="12" y2="14" />
+            </svg>
+            Chemicals
+            <span class="nav-badge">@chemicalCount</span>
+        </a>
+
+        <a class="nav-item @(activeTab == "equipment" ? "active" : "")"
+           asp-controller="Dashboard"
+           asp-action="Index"
+           asp-route-tab="equipment">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14" />
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07" />
+            </svg>
+            Equipment
+            <span class="nav-badge">@equipmentCount</span>
+        </a>
+
+        <div class="nav-section">Lab Work</div>
+
+        <a class="nav-item @(activeTab == "experiments" ? "active" : "")"
+           asp-controller="Dashboard"
+           asp-action="Index"
+           asp-route-tab="experiments">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.5 2v17.5c0 1.4-1.1 2.5-2.5 2.5s-2.5-1.1-2.5-2.5V2" />
+                <path d="M8.5 2h7" />
+                <path d="M14.5 16h-5" />
+            </svg>
+            Experiments
+            <span class="nav-badge">@experimentCount</span>
+        </a>
+
+        <a class="nav-item @(activeTab == "reactions" ? "active" : "")"
+           asp-controller="Dashboard"
+           asp-action="Index"
+           asp-route-tab="reactions">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="1" />
+                <path d="M20.2 20.2c-2.4 2.4-7.8-1.2-12-5.5C3.8 10.5.2 5.1 2.6 2.6c2.4-2.4 7.8 1.2 12 5.5 4.3 4.2 7.9 9.6 5.6 12.1z" />
+                <path d="M20.2 3.8c2.4 2.4-1.2 7.8-5.5 12C10.5 20.2 5.1 23.8 2.6 21.4c-2.4-2.4 1.2-7.8 5.5-12 4.2-4.3 9.6-7.9 12.1-5.6z" />
+            </svg>
+            Reactions
+            <span class="nav-badge">@reactionCount</span>
+        </a>
+
+        <div class="nav-section">People</div>
+
+        <a class="nav-item @(activeTab == "researchers" ? "active" : "")"
+           asp-controller="Dashboard"
+           asp-action="Index"
+           asp-route-tab="researchers">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            Researchers
+            <span class="nav-badge">@researcherCount</span>
+        </a>
+
+        @if (User.IsInRole("Admin") || User.IsInRole("Supervisor"))
+        {
+            <div class="nav-section">Users</div>
+
+            @if (User.IsInRole("Admin"))
+            {
+                <a class="nav-item"
+                   asp-controller="Admin"
+                   asp-action="Users">
+                    Manage Users
+                </a>
+            }
+
+            <a class="nav-item"
+               asp-controller="Admin"
+               asp-action="CreateUser">
+                Create User
+            </a>
+        }
+
+    </nav>
+
+    <div class="sidebar-footer">
+        Minenhle Excellent Ndlovu<br />
+        CS + Chemistry · 2026
+    </div>
+</aside>

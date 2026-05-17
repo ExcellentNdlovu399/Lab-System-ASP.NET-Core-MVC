@@ -1,0 +1,110 @@
+﻿@model Lab_System.Models.ResearcherProfile
+
+@{
+    var users = ViewBag.Users as List<Lab_System.Models.ApplicationUser> ?? new();
+}
+
+<div class="card" style="max-width:760px;margin:40px auto;">
+
+    <div class="card-header">
+        <div class="card-title">
+            Add Researcher Profile
+        </div>
+    </div>
+
+    <form asp-action="Create" method="post">
+
+        <div class="filter-row">
+
+            <select asp-for="UserId"
+                    class="filter-input">
+
+                <option value="">
+                    Select user
+                </option>
+
+                @foreach (var user in users)
+                {
+                    <option value="@user.Id">
+                        @user.FullName - @user.RoleName
+                    </option>
+                }
+
+            </select>
+
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Department"
+                   class="filter-input"
+                   placeholder="Department" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Position"
+                   class="filter-input"
+                   placeholder="Position" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="StudentNumber"
+                   class="filter-input"
+                   placeholder="Student number" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="ResearchArea"
+                   class="filter-input"
+                   placeholder="Research area" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="LabGroup"
+                   class="filter-input"
+                   placeholder="Lab group" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Qualification"
+                   class="filter-input"
+                   placeholder="Qualification" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="PhoneNumber"
+                   class="filter-input"
+                   placeholder="Phone number" />
+        </div>
+
+        <div class="filter-row">
+
+            <textarea asp-for="Biography"
+                      class="filter-input"
+                      rows="8"
+                      style="width:100%;
+                             min-height:200px;
+                             resize:vertical;
+                             padding:14px;
+                             line-height:1.7;"
+                      placeholder="Biography..."></textarea>
+
+        </div>
+
+        <button type="submit"
+                class="pill active">
+
+            Save Profile
+
+        </button>
+
+        <a asp-action="Index"
+           class="pill"
+           style="text-decoration:none;">
+
+            Cancel
+
+        </a>
+
+    </form>
+
+</div>

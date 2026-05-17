@@ -1,0 +1,44 @@
+﻿@model Lab_System.Models.ViewModels.EditUserViewModel
+
+<div class="card" style="max-width:520px;margin:40px auto;">
+    <div class="card-header">
+        <div class="card-title">Edit User</div>
+    </div>
+
+    <form asp-action="EditUser" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="filter-row">
+            <input asp-for="FullName" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Email" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <select asp-for="Role" class="filter-input">
+                @if (User.IsInRole("Admin"))
+                {
+                    <option value="Admin">Admin</option>
+                    <option value="LabManager">LabManager</option>
+                    <option value="Supervisor">Supervisor</option>
+                    <option value="Researcher">Researcher</option>
+                }
+
+                @if (User.IsInRole("Supervisor"))
+                {
+                    <option value="Researcher">Researcher</option>
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="pill active">
+            Save Changes
+        </button>
+
+        <div asp-validation-summary="All"
+             style="margin-top:14px;color:var(--accent3);font-size:12px;">
+        </div>
+    </form>
+</div>

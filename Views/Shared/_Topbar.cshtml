@@ -1,0 +1,71 @@
+﻿@{
+    var activeTab = ViewData["ActiveTab"]?.ToString() ?? "overview";
+    var searchTerm = ViewData["SearchTerm"]?.ToString() ?? "";
+    var pageTitle = activeTab.Substring(0, 1).ToUpper() + activeTab.Substring(1);
+}
+
+<div class="topbar">
+    <div class="page-title" id="topbar-title">
+        @pageTitle
+    </div>
+
+    <div class="topbar-right">
+        <form asp-controller="Dashboard"
+              asp-action="Index"
+              method="get"
+              class="search-box">
+
+            <input type="hidden"
+                   name="tab"
+                   value="@activeTab" />
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+
+            <input type="text"
+                   name="search"
+                   value="@searchTerm"
+                   placeholder="Search anything..." />
+        </form>
+
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            var name = User.Identity.Name ?? "User";
+            var initials = name.Length >= 2
+            ? name.Substring(0, 2).ToUpper()
+            : name.ToUpper();
+
+            <a asp-controller="Account"
+               asp-action="Profile"
+               class="avatar"
+               title="Profile"
+               style="text-decoration:none;">
+                @initials
+            </a>
+
+            <a asp-controller="Account"
+               asp-action="Logout"
+               class="pill"
+               style="text-decoration:none;">
+                Logout
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Account"
+               asp-action="Login"
+               class="avatar"
+               title="Login"
+               style="text-decoration:none;">
+                LG
+            </a>
+        }
+    </div>
+</div>

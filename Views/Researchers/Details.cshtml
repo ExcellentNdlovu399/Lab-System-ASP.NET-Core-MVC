@@ -1,0 +1,71 @@
+﻿@model Lab_System.Models.ResearcherProfile
+
+<div class="card" style="max-width:860px;margin:40px auto;">
+
+    <div class="card-header">
+
+        <div>
+            <div class="card-title">
+                @(Model.User?.FullName)
+            </div>
+
+            <div style="font-size:12px;color:var(--muted)">
+                @Model.Position
+            </div>
+        </div>
+
+        <span class="badge badge-purple">
+            @(Model.User?.RoleName)
+        </span>
+
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Department</div>
+        <div class="mini-val">@Model.Department</div>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Research Area</div>
+        <div class="mini-val">@Model.ResearchArea</div>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Lab Group</div>
+        <div class="mini-val">@Model.LabGroup</div>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Qualification</div>
+        <div class="mini-val">@Model.Qualification</div>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Student Number</div>
+        <div class="mini-val">@Model.StudentNumber</div>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Phone</div>
+        <div class="mini-val">@Model.PhoneNumber</div>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Joined</div>
+        <div class="mini-val">
+            @Model.JoinedDate.ToString("yyyy-MM-dd")
+        </div>
+    </div>
+
+    <div class="section-head">
+        Biography
+    </div>
+
+    <div class="result-box">
+        <div class="result-text"
+             style="white-space:pre-line;">
+            @Model.Biography
+        </div>
+    </div>
+
+</div>

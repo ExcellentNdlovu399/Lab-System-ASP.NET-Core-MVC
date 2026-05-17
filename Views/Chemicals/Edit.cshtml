@@ -1,0 +1,89 @@
+﻿@model Lab_System.Models.Chemicals
+
+<div class="card" style="max-width:620px;margin:40px auto;">
+    <div class="card-header">
+        <div class="card-title">Edit Chemical</div>
+    </div>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="filter-row">
+            <input asp-for="Name" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Formula" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <select asp-for="State" class="filter-input">
+                <option value="liquid">liquid</option>
+                <option value="solid">solid</option>
+                <option value="gas">gas</option>
+            </select>
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="MolecularWeight" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="CasNumber" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="StockQuantity" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="HazardClass" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Supplier" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="ExpiryDate" type="date" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="StorageLocation"
+                   class="filter-input"
+                   placeholder="Storage location e.g. Cabinet A3" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Purity"
+                   class="filter-input"
+                   placeholder="Purity e.g. 99.8%" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Unit"
+                   class="filter-input"
+                   placeholder="Unit e.g. mL, g, kg" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Notes"
+                   class="filter-input"
+                   placeholder="Notes" />
+        </div>
+
+        <button type="submit" class="pill active">Save Changes</button>
+
+        <a asp-controller="Dashboard"
+           asp-action="Index"
+           asp-route-tab="chemicals"
+           class="pill"
+           style="text-decoration:none;">
+            Cancel
+        </a>
+
+        <div asp-validation-summary="All"
+             style="margin-top:14px;color:var(--accent3);font-size:12px;">
+        </div>
+    </form>
+</div>

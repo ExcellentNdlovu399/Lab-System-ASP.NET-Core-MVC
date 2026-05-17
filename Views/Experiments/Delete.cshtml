@@ -1,0 +1,47 @@
+﻿@model Lab_System.Models.Experiment
+
+<div class="card" style="max-width:620px;margin:40px auto;">
+    <div class="card-header">
+        <div class="card-title">Delete Experiment</div>
+    </div>
+
+    <p style="color:var(--muted);font-size:13px;">
+        Are you sure you want to delete this experiment?
+    </p>
+
+    <div class="mini-row">
+        <div class="mini-key">Experiment</div>
+        <div class="mini-val">Experiment @Model.ExperimentNumber</div>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Title</div>
+        <div class="mini-val">@Model.Title</div>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Status</div>
+        <span class="badge badge-purple">@Model.Status</span>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Started</div>
+        <div class="mini-val">@Model.StartedDate.ToString("yyyy-MM-dd")</div>
+    </div>
+
+    <form asp-action="Delete" method="post" style="margin-top:16px;">
+        <input type="hidden" asp-for="Id" />
+
+        <button type="submit" class="pill active">
+            Confirm Delete
+        </button>
+
+        <a asp-controller="Dashboard"
+           asp-action="Index"
+           asp-route-tab="experiments"
+           class="pill"
+           style="text-decoration:none;">
+            Cancel
+        </a>
+    </form>
+</div>

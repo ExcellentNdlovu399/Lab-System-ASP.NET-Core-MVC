@@ -1,0 +1,62 @@
+﻿@model Lab_System.Models.ViewModels.CreateUserViewModel
+
+<div class="card" style="max-width:520px;margin:40px auto;">
+    <div class="card-header">
+        <div class="card-title">Create User Account</div>
+    </div>
+
+    <form asp-action="CreateUser" method="post">
+
+        <div class="filter-row">
+            <input asp-for="FullName"
+                   class="filter-input"
+                   placeholder="Full name" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Email"
+                   class="filter-input"
+                   placeholder="Email address" />
+        </div>
+
+        <div class="filter-row">
+            <select asp-for="Role" class="filter-input">
+                <option value="">Select role</option>
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <option value="LabManager">LabManager</option>
+                    <option value="Supervisor">Supervisor</option>
+                    <option value="Researcher">Researcher</option>
+                }
+
+                @if (User.IsInRole("Supervisor"))
+                {
+                    <option value="Researcher">Researcher</option>
+                }
+            </select>
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Password"
+                   class="filter-input"
+                   placeholder="Temporary password" />
+        </div>
+
+        <button type="submit"
+                class="pill active">
+            Create Account
+        </button>
+
+        <a asp-controller="Dashboard"
+           asp-action="Index"
+           class="pill"
+           style="text-decoration:none;">
+            Cancel
+        </a>
+
+        <div asp-validation-summary="All"
+             style="margin-top:14px;color:var(--accent3);font-size:12px;">
+        </div>
+    </form>
+</div>

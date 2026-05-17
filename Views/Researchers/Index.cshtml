@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Lab_System.Models.ResearcherProfile>
+
+<div class="filter-row">
+
+    <div class="page-title">
+        Researcher Profiles
+    </div>
+
+    @if (User.IsInRole("Admin") ||
+        User.IsInRole("Supervisor"))
+    {
+        <a asp-action="Create"
+           class="pill active"
+           style="text-decoration:none;">
+            + Add Profile
+        </a>
+    }
+
+</div>
+
+<div class="grid-2">
+
+    @foreach (var item in Model)
+    {
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+                    <div class="card-title">
+                        @(item.User?.FullName ?? "Unknown")
+                    </div>
+
+                    <div style="font-size:12px;color:var(--muted)">
+                        @item.Position
+                    </div>
+                </div>
+
+                <span class="badge badge-purple">
+                    @(item.User?.RoleName)
+                </span>
+
+            </div>
+
+            <div class="mini-row">
+                <div class="mini-key">Department</div>
+                <div class="mini-val">@item.Department</div>
+            </div>
+
+            <div class="mini-row">
+                <div class="mini-key">Research Area</div>
+                <div class="mini-val">@item.ResearchArea</div>
+            </div>
+
+            <div class="mini-row">
+                <div class="mini-key">Lab Group</div>
+                <div class="mini-val">@item.LabGroup</div>
+            </div>
+
+            <div class="mini-row">
+                <div class="mini-key">Student Number</div>
+                <div class="mini-val">@item.StudentNumber</div>
+            </div>
+
+            <div class="tag-list">
+
+                <a asp-action="Details"
+                   asp-route-id="@item.Id"
+                   class="tag"
+                   style="text-decoration:none;">
+                    View
+                </a>
+
+                @if (User.IsInRole("Admin") ||
+                            User.IsInRole("Supervisor"))
+                {
+                    <a asp-action="Edit"
+                       asp-route-id="@item.Id"
+                       class="tag"
+                       style="text-decoration:none;">
+                        Edit
+                    </a>
+                }
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Delete"
+                       asp-route-id="@item.Id"
+                       class="tag"
+                       style="text-decoration:none;">
+                        Delete
+                    </a>
+                }
+
+            </div>
+
+        </div>
+    }
+
+</div>

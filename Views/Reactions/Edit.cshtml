@@ -1,0 +1,86 @@
+﻿@model Lab_System.Models.ReactionStep
+
+@{
+    var experiments = ViewBag.Experiments as List<Lab_System.Models.Experiment> ?? new();
+    var parentSteps = ViewBag.ParentSteps as List<Lab_System.Models.ReactionStep> ?? new();
+}
+
+<div class="card" style="max-width:720px;margin:40px auto;">
+    <div class="card-header">
+        <div class="card-title">Edit Reaction Step</div>
+    </div>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="filter-row">
+            <select asp-for="ExperimentId" class="filter-input">
+                @foreach (var experiment in experiments)
+                {
+                    <option value="@experiment.Id">
+                        Experiment @experiment.ExperimentNumber — @experiment.Title
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="filter-row">
+            <select asp-for="ParentStepId" class="filter-input">
+                <option value="">No parent step/root step</option>
+                @foreach (var step in parentSteps)
+                {
+                    <option value="@step.Id">
+                        Step @step.StepOrder — @step.StepTitle
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="StepOrder" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="StepTitle" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="StepType" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Temperature" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Pressure" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="ReactionEquation" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <textarea asp-for="Description"
+                      class="filter-input"
+                      rows="6"
+                      style="width:100%;min-height:160px;resize:vertical;padding:14px;line-height:1.7;"></textarea>
+        </div>
+
+        <button type="submit" class="pill active">
+            Save Changes
+        </button>
+
+        <a asp-controller="Dashboard"
+           asp-action="Index"
+           asp-route-tab="reactions"
+           class="pill"
+           style="text-decoration:none;">
+            Cancel
+        </a>
+
+        <div asp-validation-summary="All"
+             style="margin-top:14px;color:var(--accent3);font-size:12px;">
+        </div>
+    </form>
+</div>

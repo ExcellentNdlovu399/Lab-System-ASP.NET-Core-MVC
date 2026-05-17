@@ -1,0 +1,962 @@
+﻿@model Lab_System.Models.ViewModels.DashboardViewModel
+
+<div id="page-overview" class="page @(Model.IsActive("overview") ? "active" : "")">
+
+    <div class="grid-4">
+        <div class="metric green">
+            <div class="metric-value">@Model.ChemicalCount</div>
+            <div class="metric-label">Chemicals in stock</div>
+            <div class="metric-sub">From database</div>
+        </div>
+
+        <div class="metric purple">
+            <div class="metric-value">@Model.ActiveExperimentCount</div>
+            <div class="metric-label">Active experiments</div>
+            <div class="metric-sub">In-progress</div>
+        </div>
+
+        <div class="metric blue">
+            <div class="metric-value">@Model.EquipmentCount</div>
+            <div class="metric-label">Equipment items</div>
+            <div class="metric-sub">Lab equipment</div>
+        </div>
+
+        <div class="metric yellow">
+            <div class="metric-value">@Model.LatestYield%</div>
+            <div class="metric-label">Latest yield</div>
+            <div class="metric-sub">Last experiment</div>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Expiry alerts</div>
+                <span class="badge badge-yellow">@Model.ExpiryAlerts.Count items</span>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Chemical</th>
+                        <th>Qty</th>
+                        <th>Expires</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.ExpiryAlerts)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td class="mono">@item.Quantity</td>
+                            <td class="mono">@item.ExpiryDate.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                <span class="badge badge-yellow">
+                                    @item.DaysLeft days
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Recent activity</div>
+            </div>
+
+            <div class="tl">
+                @foreach (var item in Model.RecentActivities)
+                {
+                    <div class="tl-item">
+                        <div class="tl-left">
+                            <div class="tl-dot" style="background:var(--accent)"></div>
+                            <div class="tl-line"></div>
+                        </div>
+
+                        <div class="tl-body">
+                            <div class="tl-title">@item.Title</div>
+                            <div class="tl-meta">@item.Meta</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-3">
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Chemical usage by experiment</div>
+            </div>
+
+            @if (Model.ChemicalUsage.Any())
+            {
+                @foreach (var item in Model.ChemicalUsage)
+                {
+                    <div class="bar-row">
+                        <div class="bar-label">@item.Name</div>
+
+                        <div class="bar-track">
+                            <div class="bar-fill"
+                                 style="width:@item.Percentage%;background:var(--accent)">
+                            </div>
+                        </div>
+
+                        <div class="bar-num">@item.Amount</div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty">
+                    No chemical usage recorded yet.
+                </div>
+            }
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Experiment status</div>
+            </div>
+
+            <div class="donut-section">
+                <svg width="70" height="70" viewBox="0 0 70 70">
+                    <circle cx="35"
+                            cy="35"
+                            r="26"
+                            fill="none"
+                            stroke="var(--surface3)"
+                            stroke-width="10" />
+
+                    <circle cx="35"
+                            cy="35"
+                            r="26"
+                            fill="none"
+                            stroke="var(--accent2)"
+                            stroke-width="10"
+                            stroke-dasharray="163.4 0"
+                            stroke-dashoffset="0"
+                            stroke-linecap="round"
+                            transform="rotate(-90 35 35)" />
+                </svg>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--accent2)"></div>
+                        In-progress (@Model.InProgressCount)
+                    </div>
+
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--accent5)"></div>
+                        Planned (@Model.PlannedCount)
+                    </div>
+
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--hint)"></div>
+                        Completed (@Model.CompletedCount)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+        <div class="card-header">
+            <div class="card-title">Experiment Approval Statistics</div>
+        </div>
+
+        <div class="bar-row">
+            <div class="bar-label">Pending</div>
+            <div class="bar-track">
+                <div class="bar-fill" style="width:@(Model.PendingApprovalCount * 20)%;background:var(--accent5)"></div>
+            </div>
+            <div class="bar-num">@Model.PendingApprovalCount</div>
+        </div>
+
+        <div class="bar-row">
+            <div class="bar-label">Approved</div>
+            <div class="bar-track">
+                <div class="bar-fill" style="width:@(Model.ApprovedCount * 20)%;background:var(--accent)"></div>
+            </div>
+            <div class="bar-num">@Model.ApprovedCount</div>
+        </div>
+
+        <div class="bar-row">
+            <div class="bar-label">Rejected</div>
+            <div class="bar-track">
+                <div class="bar-fill" style="width:@(Model.RejectedCount * 20)%;background:var(--accent3)"></div>
+            </div>
+            <div class="bar-num">@Model.RejectedCount</div>
+        </div>
+
+        <div class="bar-row">
+            <div class="bar-label">Revision Required</div>
+            <div class="bar-track">
+                <div class="bar-fill" style="width:@(Model.RevisionRequiredCount * 20)%;background:var(--accent2)"></div>
+            </div>
+            <div class="bar-num">@Model.RevisionRequiredCount</div>
+        </div>
+    </div>
+
+</div>
+
+<div id="page-chemicals" class="page @(Model.IsActive("chemicals") ? "active" : "")">
+
+    <div class="filter-row">
+        <form asp-controller="Dashboard"
+              asp-action="Index"
+              method="get"
+              style="display:flex;gap:10px;flex:1;">
+
+            <input type="hidden" name="tab" value="chemicals" />
+
+            <input type="text"
+                   name="search"
+                   value="@Model.SearchTerm"
+                   class="filter-input"
+                   placeholder="Search by name, formula, hazard..." />
+
+            <button type="submit" class="pill active">
+                Search
+            </button>
+        </form>
+
+        @if (User.IsInRole("Admin") || User.IsInRole("LabManager"))
+        {
+            <a asp-controller="Chemicals"
+               asp-action="Create"
+               class="pill active"
+               style="text-decoration:none;">
+                + Add Chemical
+            </a>
+        }
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+        <div class="table-wrap">
+            <table id="chem-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Formula</th>
+                        <th>State</th>
+                        <th>MW</th>
+                        <th>CAS No.</th>
+                        <th>Stock</th>
+                        <th>Hazard</th>
+                        <th>Supplier</th>
+                        <th>Storage</th>
+                        <th>Purity</th>
+                        <th>Unit</th>
+                        <th>Notes</th>
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("LabManager"))
+                        {
+                            <th>Actions</th>
+                        }
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.Chemicals)
+                    {
+                        <tr>
+                            <td style="font-weight:500">@item.Name</td>
+                            <td class="formula">@item.Formula</td>
+                            <td><span class="badge badge-blue">@item.State</span></td>
+                            <td class="mono">@item.MolecularWeight</td>
+                            <td class="mono" style="color:var(--hint)">@item.CasNumber</td>
+                            <td class="mono">@item.StockQuantity</td>
+                            <td><span class="badge badge-yellow">@item.HazardClass</span></td>
+                            <td style="color:var(--muted)">@item.Supplier</td>
+                            <td class="mono">@item.StorageLocation</td>
+                            <td class="mono">@item.Purity</td>
+                            <td class="mono">@item.Unit</td>
+                            <td>@item.Notes</td>
+
+                            @if (User.IsInRole("Admin") || User.IsInRole("LabManager"))
+                            {
+                                <td>
+                                    <a asp-controller="Chemicals"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="tag"
+                                       style="text-decoration:none;">
+                                        Edit
+                                    </a>
+
+                                    @if (User.IsInRole("Admin") || User.IsInRole("LabManager"))
+                                    {
+                                        <a asp-controller="Chemicals"
+                                           asp-action="Delete"
+                                           asp-route-id="@item.Id"
+                                           class="tag"
+                                           style="text-decoration:none;">
+                                            Delete
+                                        </a>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div id="page-equipment" class="page @(Model.IsActive("equipment") ? "active" : "")">
+
+    <div class="filter-row">
+
+        <form asp-controller="Dashboard"
+              asp-action="Index"
+              method="get"
+              style="display:flex;gap:10px;flex:1;">
+
+            <input type="hidden"
+                   name="tab"
+                   value="equipment" />
+
+            <input type="text"
+                   name="search"
+                   value="@Model.SearchTerm"
+                   class="filter-input"
+                   placeholder="Search equipment..." />
+
+            <button type="submit"
+                    class="pill active">
+                Search
+            </button>
+
+        </form>
+
+        @if (User.IsInRole("Admin") ||
+                User.IsInRole("LabManager"))
+        {
+            <a asp-controller="Equipment"
+               asp-action="Create"
+               class="pill active"
+               style="text-decoration:none;">
+
+                + Add Equipment
+
+            </a>
+        }
+
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+
+        <div class="card-header">
+            <div class="card-title">
+                Equipment inventory
+            </div>
+        </div>
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Model</th>
+                        <th>Serial No.</th>
+                        <th>Status</th>
+                        <th>Last calibrated</th>
+                        <th>Hours used</th>
+                        <th>Location</th>
+
+                        @if (User.IsInRole("Admin") ||
+                                                User.IsInRole("LabManager"))
+                        {
+                            <th>Actions</th>
+                        }
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model.Equipment)
+                    {
+                        <tr>
+
+                            <td style="font-weight:500">
+                                @item.Name
+                            </td>
+
+                            <td style="color:var(--muted)">
+                                @item.Type
+                            </td>
+
+                            <td class="mono">
+                                @item.Model
+                            </td>
+
+                            <td class="mono"
+                                style="font-size:10px;color:var(--hint)">
+                                @item.SerialNumber
+                            </td>
+
+                            <td>
+                                <span class="badge badge-green">
+                                    @item.Status
+                                </span>
+                            </td>
+
+                            <td class="mono">
+                                @item.LastCalibrated.ToString("yyyy-MM-dd")
+                            </td>
+
+                            <td class="mono">
+                                @item.HoursUsed hrs
+                            </td>
+
+                            <td class="mono">
+                                @item.Location
+                            </td>
+
+                            @if (User.IsInRole("Admin") ||
+                                                    User.IsInRole("LabManager"))
+                            {
+                                <td>
+
+                                    <a asp-controller="Equipment"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="tag"
+                                       style="text-decoration:none;">
+
+                                        Edit
+
+                                    </a>
+
+                                    @if (User.IsInRole("Admin") ||
+                                                                User.IsInRole("LabManager"))
+                                    {
+                                        <a asp-controller="Equipment"
+                                           asp-action="Delete"
+                                           asp-route-id="@item.Id"
+                                           class="tag"
+                                           style="text-decoration:none;">
+
+                                            Delete
+
+                                        </a>
+                                    }
+
+                                </td>
+                            }
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="grid-2">
+
+        <div class="card">
+
+            <div class="card-header">
+                <div class="card-title">
+                    Utilisation
+                </div>
+            </div>
+
+            @foreach (var item in Model.Equipment.Take(4))
+            {
+                var width =
+                item.HoursUsed > 0
+                ? Math.Min(item.HoursUsed * 20, 100)
+                : 1;
+
+                <div class="bar-row">
+
+                    <div class="bar-label">
+                        @item.Name
+                    </div>
+
+                    <div class="bar-track">
+                        <div class="bar-fill"
+                             style="width:@width%;background:var(--accent)">
+                        </div>
+                    </div>
+
+                    <div class="bar-num">
+                        @item.HoursUsed h
+                    </div>
+
+                </div>
+            }
+
+        </div>
+
+        <div class="card">
+
+            <div class="card-header">
+                <div class="card-title">
+                    Status summary
+                </div>
+            </div>
+
+            @foreach (var status in Model.Equipment.GroupBy(e => e.Status))
+            {
+                <div class="mini-row">
+
+                    <div class="mini-key">
+                        @status.Key
+                    </div>
+
+                    <span class="badge badge-green">
+                        @status.Count()
+                    </span>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+<div id="page-experiments" class="page @(Model.IsActive("experiments") ? "active" : "")">
+
+    <div class="filter-row">
+        <form asp-controller="Dashboard"
+              asp-action="Index"
+              method="get"
+              style="display:flex;gap:10px;flex:1;">
+
+            <input type="hidden" name="tab" value="experiments" />
+
+            <input type="text"
+                   name="search"
+                   value="@Model.SearchTerm"
+                   class="filter-input"
+                   placeholder="Search experiments..." />
+
+            <button type="submit" class="pill active">
+                Search
+            </button>
+        </form>
+
+        @if (User.IsInRole("Admin") ||
+                User.IsInRole("Supervisor") ||
+                User.IsInRole("Researcher"))
+        {
+            <a asp-controller="Experiments"
+               asp-action="Create"
+               class="pill active"
+               style="text-decoration:none;">
+                + Add Experiment
+            </a>
+        }
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+        <div class="card-header">
+            <div class="card-title">All experiments</div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Researcher</th>
+                        <th>Started</th>
+                        <th>Status</th>
+                        <th>Yield</th>
+
+                        @if (User.IsInRole("Admin") ||
+                                                User.IsInRole("Supervisor") ||
+                                                User.IsInRole("Researcher"))
+                        {
+                            <th>Actions</th>
+                        }
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var item in Model.Experiments)
+                    {
+                        <tr>
+                            <td style="font-weight:500;max-width:280px">
+                                @item.Title
+                            </td>
+
+                            <td style="color:var(--muted)">
+                                @(item.Researcher?.FullName ?? "Unknown")
+                            </td>
+
+                            <td class="mono">
+                                @item.StartedDate.ToString("yyyy-MM-dd")
+                            </td>
+
+                            <td>
+                                <span class="badge badge-purple">
+                                    @item.Status
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="badge badge-green">
+                                    @item.YieldPercentage%
+                                </span>
+                            </td>
+
+                            <td>
+                                <a asp-controller="Experiments"
+                                   asp-action="Details"
+                                   asp-route-id="@item.Id"
+                                   class="tag"
+                                   style="text-decoration:none;">
+                                    View
+                                </a>
+
+                                @if (User.IsInRole("Admin") ||
+                                                            User.IsInRole("Supervisor") ||
+                                                            User.IsInRole("Researcher"))
+                                {
+                                <td>
+
+                                    <a asp-controller="Experiments"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="tag"
+                                       style="text-decoration:none;">
+                                        Edit
+                                    </a>
+
+                                    @if (User.IsInRole("Supervisor"))
+                                    {
+                                        <a asp-controller="Experiments"
+                                           asp-action="Delete"
+                                           asp-route-id="@item.Id"
+                                           class="tag"
+                                           style="text-decoration:none;">
+                                            Delete
+                                        </a>
+                                    }
+                                </td>
+                            }
+                            </td>
+
+                            
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @foreach (var item in Model.Experiments.Take(1))
+    {
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Experiment detail</div>
+                <span class="badge badge-purple">@item.Status</span>
+            </div>
+
+            <div style="font-size:15px;font-family:var(--head);font-weight:600;color:var(--text);margin-bottom:4px">
+                @item.Title
+            </div>
+
+            <div style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6">
+                @item.Description
+            </div>
+
+            <div class="result-box">
+                <div class="result-label">
+                    Result
+                </div>
+
+                <div class="result-text">
+                    @item.Result
+                </div>
+
+                <div class="yield-row">
+                    <div style="font-size:11px;color:var(--muted);font-family:var(--mono)">
+                        Yield
+                    </div>
+
+                    <div class="yield-track">
+                        <div class="yield-fill"
+                             style="width:@item.YieldPercentage%">
+                        </div>
+                    </div>
+
+                    <div class="yield-pct">
+                        @item.YieldPercentage%
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+<div id="page-reactions" class="page @(Model.IsActive("reactions") ? "active" : "")">
+
+    <div class="filter-row">
+        <form asp-controller="Dashboard"
+              asp-action="Index"
+              method="get"
+              style="display:flex;gap:10px;flex:1;">
+
+            <input type="hidden" name="tab" value="reactions" />
+
+            <input type="text"
+                   name="search"
+                   value="@Model.SearchTerm"
+                   class="filter-input"
+                   placeholder="Search reaction steps..." />
+
+            <button type="submit" class="pill active">
+                Search
+            </button>
+        </form>
+
+        @if (User.IsInRole("Admin") || User.IsInRole("Researcher"))
+        {
+            <a asp-controller="Reactions"
+               asp-action="Create"
+               class="pill active"
+               style="text-decoration:none;">
+                + Add Reaction Step
+            </a>
+        }
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+        <div class="card-header">
+            <div class="card-title">Reaction pathway</div>
+            <span class="badge badge-gray mono">recursive FK</span>
+        </div>
+
+        <div style="font-size:12px;color:var(--muted);margin-bottom:14px">
+            Multi-step pathway stored with a self-referencing parent step.
+        </div>
+
+        <div class="step-chain">
+            @foreach (var step in Model.Reactions.OrderBy(r => r.StepOrder))
+            {
+                <div class="step-node @(step.ParentStepId == null ? "green" : "purple")">
+                    <div class="step-num">
+                        Step @step.StepOrder · @step.StepType
+                    </div>
+
+                    <div class="step-name">
+                        @step.StepTitle
+                    </div>
+
+                    <div class="step-meta">
+                        @step.Temperature°C · @step.Pressure · parent:
+                        @(step.ParentStepId == null ? "NULL" : step.ParentStepId.ToString())
+                    </div>
+
+                    <div class="tag-list">
+                        <a asp-controller="Reactions"
+                           asp-action="Details"
+                           asp-route-id="@step.Id"
+                           class="tag"
+                           style="text-decoration:none;">
+                            View
+                        </a>
+
+                        @if (User.IsInRole("Admin") || User.IsInRole("Researcher"))
+                        {
+                            <a asp-controller="Reactions"
+                               asp-action="Edit"
+                               asp-route-id="@step.Id"
+                               class="tag"
+                               style="text-decoration:none;">
+                                Edit
+                            </a>
+                        }
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="Reactions"
+                               asp-action="Delete"
+                               asp-route-id="@step.Id"
+                               class="tag"
+                               style="text-decoration:none;">
+                                Delete
+                            </a>
+                        }
+                    </div>
+                </div>
+
+                <div class="step-arrow">→</div>
+            }
+        </div>
+    </div>
+
+    <div class="grid-2">
+        @foreach (var step in Model.Reactions.OrderBy(r => r.StepOrder))
+        {
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        Step @step.StepOrder — @step.StepTitle
+                    </div>
+
+                    <span class="badge badge-green" style="font-size:10px">
+                        @step.Temperature°C
+                    </span>
+                </div>
+
+                <div class="mini-row">
+                    <div class="mini-key">Type</div>
+                    <div class="mini-val">@step.StepType</div>
+                </div>
+
+                <div class="mini-row">
+                    <div class="mini-key">Pressure</div>
+                    <div class="mini-val">@step.Pressure</div>
+                </div>
+
+                <div class="mini-row">
+                    <div class="mini-key">Experiment</div>
+                    <div class="mini-val">@step.Experiment?.Title</div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">Description</div>
+                    <div class="result-text">@step.Description</div>
+                </div>
+
+                <div class="tag-list">
+                    <div class="tag">@step.ReactionEquation</div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+<div id="page-researchers" class="page @(Model.IsActive("researchers") ? "active" : "")">
+
+    <div class="filter-row">
+        <form asp-controller="Dashboard"
+              asp-action="Index"
+              method="get"
+              style="display:flex;gap:10px;flex:1;">
+
+            <input type="hidden" name="tab" value="researchers" />
+
+            <input type="text"
+                   name="search"
+                   value="@Model.SearchTerm"
+                   class="filter-input"
+                   placeholder="Search researchers..." />
+
+            <button type="submit" class="pill active">
+                Search
+            </button>
+        </form>
+
+        @if (User.IsInRole("Admin") || User.IsInRole("Supervisor"))
+        {
+            <a asp-controller="Researchers"
+               asp-action="Create"
+               class="pill active"
+               style="text-decoration:none;">
+                + Add Profile
+            </a>
+        }
+    </div>
+
+    <div class="grid-2">
+        @foreach (var item in Model.Researchers)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">
+                            @(item.User?.FullName ?? "Unknown User")
+                        </div>
+
+                        <div style="font-size:12px;color:var(--muted)">
+                            @item.Position
+                        </div>
+                    </div>
+
+                    <span class="badge badge-purple">
+                        @(item.User?.RoleName ?? "No Role")
+                    </span>
+                </div>
+
+                <div class="mini-row">
+                    <div class="mini-key">Department</div>
+                    <div class="mini-val">@item.Department</div>
+                </div>
+
+                <div class="mini-row">
+                    <div class="mini-key">Research Area</div>
+                    <div class="mini-val">@item.ResearchArea</div>
+                </div>
+
+                <div class="mini-row">
+                    <div class="mini-key">Lab Group</div>
+                    <div class="mini-val">@item.LabGroup</div>
+                </div>
+
+                <div class="mini-row">
+                    <div class="mini-key">Student Number</div>
+                    <div class="mini-val">@item.StudentNumber</div>
+                </div>
+
+                <div class="tag-list">
+                    <a asp-controller="Researchers"
+                       asp-action="Details"
+                       asp-route-id="@item.Id"
+                       class="tag"
+                       style="text-decoration:none;">
+                        View
+                    </a>
+
+                    @if (User.IsInRole("Admin") || User.IsInRole("Supervisor"))
+                    {
+                        <a asp-controller="Researchers"
+                           asp-action="Edit"
+                           asp-route-id="@item.Id"
+                           class="tag"
+                           style="text-decoration:none;">
+                            Edit
+                        </a>
+                    }
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Researchers"
+                           asp-action="Delete"
+                           asp-route-id="@item.Id"
+                           class="tag"
+                           style="text-decoration:none;">
+                            Delete
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+</div>

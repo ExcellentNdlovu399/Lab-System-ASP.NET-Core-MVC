@@ -1,0 +1,130 @@
+﻿@model Lab_System.Models.Experiment
+
+@{
+    var chemicals = ViewBag.Chemicals as List<Lab_System.Models.Chemicals> ?? new();
+}
+
+<div class="card" style="max-width:820px;margin:40px auto;">
+    <div class="card-header">
+        <div class="card-title">Add Experiment</div>
+    </div>
+
+    <form asp-action="Create" method="post">
+
+        <div class="filter-row">
+            <input asp-for="ExperimentNumber"
+                   class="filter-input"
+                   placeholder="Experiment number e.g. 8" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Title"
+                   class="filter-input"
+                   placeholder="Experiment title" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Description"
+                   class="filter-input"
+                   placeholder="Short description/objective" />
+        </div>
+
+        <div class="section-head">Experiment Report Sections</div>
+
+        <div class="section-head">Theory</div>
+        <textarea asp-for="Theory"
+                  class="filter-input"
+                  rows="5"
+                  placeholder="Write the theory/background of this experiment..."></textarea>
+
+        <div class="section-head">Procedure</div>
+        <textarea asp-for="Procedure"
+                  class="filter-input"
+                  rows="5"
+                  placeholder="Write the practical procedure..."></textarea>
+
+        <div class="section-head">Experimental Data</div>
+        <textarea asp-for="ExperimentalData"
+                  class="filter-input"
+                  rows="5"
+                  placeholder="Write tables, readings, observations, titration values, etc..."></textarea>
+
+        <div class="section-head">Calculations</div>
+        <textarea asp-for="Calculations"
+                  class="filter-input"
+                  rows="5"
+                  placeholder="Write formulas and calculations..."></textarea>
+
+        <div class="section-head">Final Results</div>
+        <textarea asp-for="FinalResults"
+                  class="filter-input"
+                  rows="5"
+                  placeholder="Write final answer, conclusion, percentage yield, etc..."></textarea>
+
+        <div class="filter-row">
+            <input asp-for="StartedDate"
+                   type="date"
+                   class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <select asp-for="Status" class="filter-input">
+                <option value="planned">planned</option>
+                <option value="in-progress">in-progress</option>
+                <option value="completed">completed</option>
+            </select>
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="YieldPercentage"
+                   class="filter-input"
+                   placeholder="Yield percentage" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Result"
+                   class="filter-input"
+                   placeholder="Short result/observation" />
+        </div>
+
+        <div class="section-head">Chemicals used</div>
+
+        @for (int i = 0; i < 3; i++)
+        {
+            <div class="filter-row">
+                <select name="chemicalIds" class="filter-input">
+                    <option value="0">Select chemical</option>
+
+                    @foreach (var chemical in chemicals)
+                    {
+                        <option value="@chemical.Id">@chemical.Name</option>
+                    }
+                </select>
+
+                <input name="quantities"
+                       class="filter-input"
+                       placeholder="Quantity used" />
+
+                <input name="units"
+                       class="filter-input"
+                       placeholder="Unit e.g. mL/g" />
+            </div>
+        }
+
+        <button type="submit" class="pill active">
+            Save Experiment
+        </button>
+
+        <a asp-controller="Dashboard"
+           asp-action="Index"
+           asp-route-tab="experiments"
+           class="pill"
+           style="text-decoration:none;">
+            Cancel
+        </a>
+
+        <div asp-validation-summary="All"
+             style="margin-top:14px;color:var(--accent3);font-size:12px;">
+        </div>
+    </form>
+</div>

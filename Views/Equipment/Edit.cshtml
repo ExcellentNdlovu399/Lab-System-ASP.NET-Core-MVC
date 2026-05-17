@@ -1,0 +1,68 @@
+﻿@model Lab_System.Models.Equipment
+
+<div class="card" style="max-width:620px;margin:40px auto;">
+    <div class="card-header">
+        <div class="card-title">Edit Equipment</div>
+    </div>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="filter-row">
+            <input asp-for="Name" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Type" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Model" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="SerialNumber" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <select asp-for="Status" class="filter-input">
+                <option value="available">available</option>
+                <option value="in use">in use</option>
+                <option value="maintenance">maintenance</option>
+                <option value="retired">retired</option>
+            </select>
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="LastCalibrated" type="date" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="HoursUsed" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Location" class="filter-input" />
+        </div>
+
+        <div class="filter-row">
+            <input asp-for="Notes" class="filter-input" />
+        </div>
+
+        <button type="submit" class="pill active">
+            Save Changes
+        </button>
+
+        <a asp-controller="Dashboard"
+           asp-action="Index"
+           asp-route-tab="equipment"
+           class="pill"
+           style="text-decoration:none;">
+            Cancel
+        </a>
+
+        <div asp-validation-summary="All"
+             style="margin-top:14px;color:var(--accent3);font-size:12px;">
+        </div>
+    </form>
+</div>

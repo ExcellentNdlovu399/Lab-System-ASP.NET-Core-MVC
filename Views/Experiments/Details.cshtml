@@ -1,0 +1,321 @@
+﻿@model Lab_System.Models.Experiment
+
+<div class="card" style="max-width:960px;margin:40px auto;">
+
+    <div class="card-header">
+        <div class="card-title">
+            Experiment @Model.ExperimentNumber — @Model.Title
+        </div>
+
+        <span class="badge badge-purple">
+            @Model.Status
+        </span>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Researcher</div>
+        <div class="mini-val">
+            @(Model.Researcher?.FullName ?? "Unknown")
+        </div>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Started</div>
+        <div class="mini-val">
+            @Model.StartedDate.ToString("yyyy-MM-dd")
+        </div>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Yield</div>
+        <span class="badge badge-green">
+            @Model.YieldPercentage%
+        </span>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Approval Status</div>
+        <span class="badge badge-purple">@Model.ApprovalStatus</span>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.SupervisorComment))
+    {
+        <div class="result-box">
+            <div class="result-label">Supervisor Comment</div>
+            <div class="result-text">@Model.SupervisorComment</div>
+        </div>
+    }
+
+    <div class="section-head">
+        @Model.ExperimentNumber.1 Theory
+    </div>
+
+    <div class="result-box">
+        <div class="result-text" style="white-space:pre-line;">
+            @Model.Theory
+        </div>
+    </div>
+
+    <div class="section-head">
+        @Model.ExperimentNumber.2 Procedure
+    </div>
+
+    <div class="result-box">
+        <div class="result-text" style="white-space:pre-line;">
+            @Model.Procedure
+        </div>
+    </div>
+
+    <div class="section-head">
+        @Model.ExperimentNumber.3 Experimental Data
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Value / Observation</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var line in (Model.ExperimentalData ?? "").Split('\n'))
+                {
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        var parts = line.Split(':', 2);
+
+                        <tr>
+                            <td class="mono">
+                                @parts[0]
+                            </td>
+
+                            <td>
+                                @(parts.Length > 1 ? parts[1] : "")
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section-head">
+        @Model.ExperimentNumber.4 Calculations
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+        <div class="tl">
+            @{
+                var calcSteps = (Model.Calculations ?? "").Split('\n');
+                var count = 1;
+            }
+
+            @foreach (var step in calcSteps)
+            {
+                if (!string.IsNullOrWhiteSpace(step))
+                {
+                    <div class="tl-item">
+                        <div class="tl-left">
+                            <div class="tl-dot" style="background:var(--accent2)"></div>
+                            <div class="tl-line"></div>
+                        </div>
+
+                        <div class="tl-body">
+                            <div class="tl-title">
+                                Step @count
+                            </div>
+
+                            <div class="tl-meta" style="white-space:pre-line;">
+                                @step
+                            </div>
+                        </div>
+                    </div>
+
+                    count++;
+                }
+            }
+        </div>
+    </div>
+
+    <div class="section-head">
+        @Model.ExperimentNumber.5 Final Results
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Result</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var line in (Model.FinalResults ?? "").Split('\n'))
+                {
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        var parts = line.Split(':', 2);
+
+                        <tr>
+                            <td>
+                                @parts[0]
+                            </td>
+
+                            <td class="mono">
+                                @(parts.Length > 1 ? parts[1] : "")
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section-head">
+        Chemicals Used
+    </div>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>Chemical</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model.ExperimentChemicals)
+                {
+                    <tr>
+                        <td>
+                            @item.Chemical.Name
+                        </td>
+
+                        <td class="mono">
+                            @item.QuantityUsed
+                        </td>
+
+                        <td class="mono">
+                            @item.Unit
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (User.IsInRole("Admin") || User.IsInRole("Supervisor"))
+    {
+        <div class="section-head">Approval Workflow</div>
+
+        <form asp-action="Review" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            <div class="filter-row">
+                <select name="status" class="filter-input">
+                    <option value="approved">approved</option>
+                    <option value="rejected">rejected</option>
+                    <option value="revision-required">revision-required</option>
+                </select>
+            </div>
+
+            <div class="filter-row">
+                <textarea name="comment"
+                      class="filter-input"
+                      rows="5"
+                      placeholder="Supervisor comment..."></textarea>
+            </div>
+
+            <button type="submit" class="pill active">
+                Submit Review
+            </button>
+        </form>
+    }
+
+    <div class="section-head">Experiment Files</div>
+
+    <form asp-action="UploadFile"
+          method="post"
+          enctype="multipart/form-data">
+
+        <input type="hidden" name="experimentId" value="@Model.Id" />
+
+        <div class="filter-row">
+            <input type="file" name="file" class="filter-input" />
+        </div>
+
+        <button type="submit" class="pill active">
+            Upload File
+        </button>
+    </form>
+
+    <div class="card" style="margin-top:14px;">
+        <table>
+            <thead>
+                <tr>
+                    <th>File</th>
+                    <th>Type</th>
+                    <th>Uploaded</th>
+                    <th>Open</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var file in Model.Attachments)
+                {
+                    <tr>
+                        <td>@file.FileName</td>
+                        <td>@file.FileType</td>
+                        <td>@file.UploadedAt.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <a href="@file.FilePath"
+                               target="_blank"
+                               class="tag"
+                               style="text-decoration:none;">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <button onclick="window.print()"
+            class="pill active"
+            style="margin-top:18px;">
+        Export to PDF
+    </button>
+
+    <div class="tag-list" style="margin-top:18px;">
+
+        <a asp-controller="Dashboard"
+           asp-action="Index"
+           asp-route-tab="experiments"
+           class="tag"
+           style="text-decoration:none;">
+            Back
+        </a>
+
+        @if (User.IsInRole("Admin") ||
+                User.IsInRole("Supervisor") ||
+                User.IsInRole("Researcher"))
+        {
+            <a asp-controller="Experiments"
+               asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="tag"
+               style="text-decoration:none;">
+                Edit
+            </a>
+        }
+
+    </div>
+
+</div>
+

@@ -1,0 +1,38 @@
+﻿@model Lab_System.Models.ApplicationUser
+
+<div class="card" style="max-width:520px;margin:40px auto;">
+    <div class="card-header">
+        <div class="card-title">My Profile</div>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Full Name</div>
+        <div class="mini-val">@Model.FullName</div>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Email</div>
+        <div class="mini-val">@Model.Email</div>
+    </div>
+
+    <div class="mini-row">
+        <div class="mini-key">Role</div>
+        <span class="badge badge-purple">@Model.RoleName</span>
+    </div>
+
+    <div class="tag-list" style="margin-top:14px;">
+        <a asp-controller="Dashboard"
+           asp-action="Index"
+           class="tag"
+           style="text-decoration:none;">
+            Back to Dashboard
+        </a>
+
+        <a asp-controller="Account"
+           asp-action="Logout"
+           class="tag"
+           style="text-decoration:none;">
+            Logout
+        </a>
+    </div>
+</div>
